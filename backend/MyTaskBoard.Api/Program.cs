@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyTaskBoard.Infrastructure.Persistence;
+using MyTaskBoard.Infrastructure.Repository;
+using MyTaskBoard.Infrastructure.Repository.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,7 @@ builder.Services.AddPooledDbContextFactory<DataContext>(options =>
     options.UseNpgsql(connectionString,
         b => b.MigrationsAssembly("MyTaskBoard.Infrastructure"));
 });
+builder.Services.AddScoped<IBoardListRepository, BoardListRepository>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
