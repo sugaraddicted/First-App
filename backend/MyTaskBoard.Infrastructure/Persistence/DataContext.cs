@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MyTaskBoard.Core.Entity;
 using MyTaskBoard.Core.Enums;
+using MyTaskBoard.Infrastructure.Configurations;
 
 namespace MyTaskBoard.Infrastructure.Persistence
 {
@@ -23,6 +24,8 @@ namespace MyTaskBoard.Infrastructure.Persistence
             modelBuilder.Entity<IdentityUserLogin<Guid>>().HasKey(x => x.UserId);
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasKey(x => x.UserId);
             modelBuilder.Entity<IdentityUserToken<Guid>>().HasKey(x => x.UserId);
+
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
         }
         public DbSet<User> Users { get; set; }
         public DbSet<BoardList> BoardLists { get; set; }
