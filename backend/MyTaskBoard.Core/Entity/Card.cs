@@ -1,5 +1,6 @@
 ﻿using MyTaskBoard.Core.Entity.Interfaces;
 using MyTaskBoard.Core.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyTaskBoard.Core.Entity
 {
@@ -11,6 +12,9 @@ namespace MyTaskBoard.Core.Entity
         public DateTime DueDate { get; set; }
         public Priority Priority { get; set; }
         public Guid BoardListId { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime CreatedAt { get; set; }
         public List<ActivityLog> ActivityLogs { get; set; }
         public BoardList BoardList { get; set; }
     }

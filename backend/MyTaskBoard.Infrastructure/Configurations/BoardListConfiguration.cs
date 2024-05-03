@@ -10,6 +10,9 @@ namespace MyTaskBoard.Infrastructure.Configurations
         {
             builder.HasKey(b => b.Id);
 
+            builder.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
             builder.Property(b => b.Id)
                 .ValueGeneratedOnAdd();
 
