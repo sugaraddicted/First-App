@@ -8,11 +8,6 @@ namespace MyTaskBoard.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(b => b.Id);
-
-            builder.Property(b => b.Id)
-                .ValueGeneratedOnAdd();
-
             builder.HasMany(u => u.Lists)
                 .WithOne(l => l.User)
                 .HasForeignKey(l => l.UserId)
