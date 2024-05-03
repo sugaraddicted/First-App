@@ -1,8 +1,9 @@
-﻿using MyTaskBoard.Core.Enums;
+﻿using MyTaskBoard.Core.Entity.Interfaces;
+using MyTaskBoard.Core.Enums;
 
 namespace MyTaskBoard.Core.Entity
 {
-    public class Card
+    public class Card : IEntityBase
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

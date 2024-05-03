@@ -1,7 +1,9 @@
 ﻿
+using MyTaskBoard.Core.Entity.Interfaces;
+
 namespace MyTaskBoard.Core.Entity
 {
-    public class ActivityLog
+    public class ActivityLog : IEntityBase
     {
         public Guid Id { get; set; }
         public string Action { get; set; }

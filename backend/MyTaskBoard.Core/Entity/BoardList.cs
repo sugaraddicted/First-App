@@ -1,6 +1,8 @@
-﻿namespace MyTaskBoard.Core.Entity
+﻿using MyTaskBoard.Core.Entity.Interfaces;
+
+namespace MyTaskBoard.Core.Entity
 {
-    public class BoardList
+    public class BoardList : IEntityBase
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
