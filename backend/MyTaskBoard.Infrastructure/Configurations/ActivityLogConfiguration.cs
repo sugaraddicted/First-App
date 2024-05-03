@@ -14,6 +14,9 @@ namespace MyTaskBoard.Infrastructure.Configurations
             builder.Property(b => b.Id)
                 .ValueGeneratedOnAdd();
 
+            builder.Property(e => e.Timestamp)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
             builder.HasOne(al => al.Card)
                 .WithMany(c => c.ActivityLogs);
         }

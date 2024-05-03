@@ -1,5 +1,6 @@
 ﻿
 using MyTaskBoard.Core.Entity.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyTaskBoard.Core.Entity
 {
@@ -8,6 +9,8 @@ namespace MyTaskBoard.Core.Entity
         public Guid Id { get; set; }
         public string Action { get; set; }
         public string CardName { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Timestamp { get; set; }
         public Guid UserId { get; set; }
         public Guid CardId { get; set; }
