@@ -26,7 +26,9 @@ namespace MyTaskBoard.Infrastructure.Persistence
             modelBuilder.Entity<IdentityUserToken<Guid>>().HasKey(x => x.UserId);
 
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new BoardListConfiguration());
         }
+
         public DbSet<User> Users { get; set; }
         public DbSet<BoardList> BoardLists { get; set; }
         public DbSet<Card> Cards { get; set; }
