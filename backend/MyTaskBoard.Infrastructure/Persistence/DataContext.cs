@@ -27,6 +27,7 @@ namespace MyTaskBoard.Infrastructure.Persistence
 
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new BoardListConfiguration());
+            modelBuilder.ApplyConfiguration(new CardConfiguration());
         }
 
         public DbSet<User> Users { get; set; }
