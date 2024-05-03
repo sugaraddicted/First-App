@@ -19,6 +19,8 @@ builder.Services.AddPooledDbContextFactory<DataContext>(options =>
         b => b.MigrationsAssembly("MyTaskBoard.Infrastructure"));
 });
 builder.Services.AddScoped<IBoardListRepository, BoardListRepository>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
