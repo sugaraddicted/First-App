@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Duende.IdentityServer" Version="7.0.4" />
+  </ItemGroup>
+
 </Project>
