@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyTaskBoard.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240503184726_ActivityTimestemp")]
-    partial class ActivityTimestemp
+    [Migration("20240504131952_Update")]
+    partial class Update
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -220,6 +220,14 @@ namespace MyTaskBoard.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("After")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Before")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<Guid>("CardId")
                         .HasColumnType("uuid");
 
@@ -314,7 +322,7 @@ namespace MyTaskBoard.Infrastructure.Migrations
                     b.HasOne("MyTaskBoard.Core.Entity.Card", "Card")
                         .WithMany("ActivityLogs")
                         .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Card");

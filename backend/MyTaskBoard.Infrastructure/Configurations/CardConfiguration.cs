@@ -22,7 +22,7 @@ namespace MyTaskBoard.Infrastructure.Configurations
             builder.HasMany(c => c.ActivityLogs)
                 .WithOne(al => al.Card)
                 .HasForeignKey(al=>  al.CardId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

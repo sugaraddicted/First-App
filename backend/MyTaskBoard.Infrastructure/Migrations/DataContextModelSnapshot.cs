@@ -217,6 +217,14 @@ namespace MyTaskBoard.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("After")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Before")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<Guid>("CardId")
                         .HasColumnType("uuid");
 
@@ -311,7 +319,7 @@ namespace MyTaskBoard.Infrastructure.Migrations
                     b.HasOne("MyTaskBoard.Core.Entity.Card", "Card")
                         .WithMany("ActivityLogs")
                         .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Card");
