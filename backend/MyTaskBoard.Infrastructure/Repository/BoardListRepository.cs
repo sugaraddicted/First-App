@@ -15,9 +15,9 @@ namespace MyTaskBoard.Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<BoardList>> GetByUserIdAsync(Guid userId)
+        public override async Task<IEnumerable<BoardList>> GetAllAsync()
         {
-            return await _context.BoardLists.Where(l => l.UserId == userId).ToListAsync();
+            return await _context.BoardLists.Include(b => b.Cards).ToListAsync();
         }
     }
 }
