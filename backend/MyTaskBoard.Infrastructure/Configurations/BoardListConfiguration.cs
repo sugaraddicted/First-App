@@ -16,9 +16,6 @@ namespace MyTaskBoard.Infrastructure.Configurations
             builder.Property(b => b.Id)
                 .ValueGeneratedOnAdd();
 
-            builder.HasOne(l => l.User)
-                .WithMany(u => u.Lists);
-
             builder.HasMany(l => l.Cards)
                 .WithOne(c => c.BoardList)
                 .HasForeignKey(c => c.BoardListId)

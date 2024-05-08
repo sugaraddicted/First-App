@@ -15,11 +15,6 @@ namespace MyTaskBoard.Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<ActivityLog>> GetByUserIdAsync(Guid userId)
-        {
-            return await _context.ActivityLogs.Where(al => al.UserId == userId).ToListAsync();
-        }
-
         public async Task<IEnumerable<ActivityLog>> GetByCardIdAsync(Guid cardId)
         {
             return await _context.ActivityLogs.Where(al => al.CardId == cardId).ToListAsync();

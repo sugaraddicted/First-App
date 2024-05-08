@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MyTaskBoard.Core.Entity;
 
@@ -21,7 +20,6 @@ namespace MyTaskBoard.Infrastructure.Configurations
             builder.Property(e => e.After)
                 .HasMaxLength(255)
                 .IsRequired(false);
-
 
             builder.Property(e => e.Timestamp)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");

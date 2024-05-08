@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyTaskBoard.Api.Dto;
 using MyTaskBoard.Core.Entity;
@@ -10,21 +8,18 @@ namespace MyTaskBoard.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class CardController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
         private readonly ICardRepository _cardRepository;
         private readonly IMapper _mapper;
         private readonly IActivityLogRepository _activityLogRepository;
         private readonly IBoardListRepository _boardListRepository;
 
-        public CardController(ICardRepository cardRepository, IMapper mapper, IActivityLogRepository activityLogRepository, UserManager<User> userManager, IBoardListRepository boardListRepository)
+        public CardController(ICardRepository cardRepository, IMapper mapper, IActivityLogRepository activityLogRepository, IBoardListRepository boardListRepository)
         {
             _cardRepository = cardRepository;
             _mapper = mapper;
             _activityLogRepository = activityLogRepository;
-            _userManager = userManager;
             _boardListRepository = boardListRepository;
         }
 
@@ -36,10 +31,17 @@ namespace MyTaskBoard.Api.Controllers
             return Ok(cardDtos);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCards()
+        {
+            var cards = await _cardRepository.GetAllAsync();
+            var cardDtos = _mapper.Map<IEnumerable<CardDto>>(cards);
+            return Ok(cardDtos);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddCard(AddCardDto cardDto)
         {
-            var user = await _userManager.GetUserAsync(User);
             var boardList = await _boardListRepository.GetByIdAsync(cardDto.BoardListId);
             var card = _mapper.Map<Card>(cardDto);
             await _cardRepository.AddAsync(card);
@@ -48,7 +50,6 @@ namespace MyTaskBoard.Api.Controllers
             {
                 Action = $"You added",
                 CardName = card.Name,
-                UserId = user.Id,
                 Timestamp = DateTime.UtcNow,
                 After = boardList.Name,
                 CardId = card.Id
@@ -86,14 +87,11 @@ namespace MyTaskBoard.Api.Controllers
             if (existingCard == null)
                 return NotFound();
 
-            var user = await _userManager.GetUserAsync(User);
-
             var activityLogDto = new ActivityLogDto()
             {
                 Action = "You deleted",
                 CardName = existingCard.Name,
                 CardId = existingCard.Id,
-                UserId = user.Id,
                 Timestamp = DateTime.UtcNow
             };
 
@@ -106,8 +104,7 @@ namespace MyTaskBoard.Api.Controllers
         }
 
         private async Task LogActivity(Card existingCard, UpdateCardDto newCard)
-        {
-            var user = await _userManager.GetUserAsync(User); 
+        { 
             var activityLogs = new List<ActivityLogDto>();
 
             if (newCard.Name != existingCard.Name)
@@ -172,7 +169,6 @@ namespace MyTaskBoard.Api.Controllers
             {
                 activityLogDto.CardId = existingCard.Id;
                 activityLogDto.CardName = newCard.Name;
-                activityLogDto.UserId = user.Id;
                 activityLogDto.Timestamp = DateTime.UtcNow;
 
                 var activityLog = _mapper.Map<ActivityLog>(activityLogDto);
