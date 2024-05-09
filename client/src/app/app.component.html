@@ -1,0 +1,4 @@
+<app-header (toggleActivityMenu)="toggleActivityMenu()"></app-header>
+<app-history-sidebar *ngIf="activityMenuOpen" (closeSidebar)="closeSidebar()"></app-history-sidebar>
+<app-board></app-board>
+<div class="overlay" *ngIf="activityMenuOpen" (click)="closeSidebar()"></div>

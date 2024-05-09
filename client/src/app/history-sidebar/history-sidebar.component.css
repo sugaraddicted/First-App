@@ -1,0 +1,42 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 450px;
+  background-color: #f0f0f0;
+  z-index: 1000;
+}
+
+.header {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: rgb(95, 95, 95);
+  color:white;
+}
+
+.activity-list {
+  margin-left: 10px;
+  max-height: 920px;
+}
+
+.close-button{
+  justify-self: end;
+}
+
+.load-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  vertical-align: middle;
+  min-width: 120px;
+  max-height: 50px;
+  margin: auto;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  background-color: rgb(255, 255, 255);
+  border: 2px solid rgb(216, 216, 216);
+  border-radius: 5px;
+}

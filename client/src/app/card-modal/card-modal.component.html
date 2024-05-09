@@ -1,0 +1,77 @@
+<div class="div-form">
+    <div class="header">
+        <button mat-icon-button class="close-button" (click)="close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <form class="form" [formGroup]="cardForm" (ngSubmit)="isEditing ? updateCard() : addCard()">
+        <mat-form-field class="name-input">
+            <input matInput placeholder="Card Name" formControlName="name" required>
+            <mat-error *ngIf="cardForm.controls['name'].invalid && cardForm.controls['name'].touched">
+                Card name is required
+            </mat-error>
+        </mat-form-field>
+        <div class="grid-container">
+            <div class="labels">
+                <div class="label-item">
+                    <mat-icon class="label-icon">list</mat-icon>
+                    <p style="margin-left: 5px;">List</p>
+                </div>
+                <div class="label-item">
+                    <mat-icon class="label-icon">calendar_today</mat-icon>
+                    <p style="margin-left: 5px;">Due Date</p>
+                </div>
+                <div class="label-item">
+                    <mat-icon class="label-icon">label</mat-icon>
+                    <p style="margin-left: 5px;">Priority</p>
+                </div>
+            </div>
+
+            <div>
+                <div class="select">
+                    <mat-form-field style="margin-bottom: 0px;">
+                        <mat-select formControlName="boardListId" required>
+                            <mat-option *ngFor="let list of lists" [value]="list.id">{{ list.name }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="cardForm.controls['boardListId'].invalid && cardForm.controls['boardListId'].touched">
+                            List is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="due-date">
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="dueDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+
+                    </mat-form-field>
+                </div>
+                <div class="priority">
+                    <mat-form-field>
+                        <mat-select placeholder="Priority" formControlName="priority" required>
+                            <mat-option *ngFor="let priority of priorities" [value]="priority">
+                                {{ priority }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="cardForm.controls['priority'].invalid && cardForm.controls['priority'].touched">
+                            Priority is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="description" style="grid-column: 1 / span 2;">
+                <mat-label style="font-size: 24;">Description</mat-label>
+                <mat-form-field>
+                    <textarea matInput placeholder="Enter description" formControlName="description" required></textarea>
+                    <mat-error *ngIf="cardForm.controls['description'].invalid && cardForm.controls['description'].touched">
+                        Description is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="save-button" [disabled]="!cardForm.valid" type="submit"> {{ isEditing ? 'Save' : 'Add Card' }}</button>
+            <button class="cancel-button" type="button" (click)="close()">Cancel</button>
+        </div>
+    </form>
+</div>
