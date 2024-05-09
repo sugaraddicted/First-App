@@ -25,3 +25,11 @@ This will start a development server, and you can view the application by naviga
 - **Activity Log**: Maintain an activity log to track changes made to cards, including creation, changes to name/description/due date/priority, movement, and deletion.
 - **Ordering**: Activity items should be ordered by date and time (descending).
 - **History Section**: Display all changes for all cards, loading only the 20 latest records initially with an option to load the next 20 records.
+- 
+## Usage Frontend
+
+```bash
+npm i
+npm run build
+npm run serve
+```
