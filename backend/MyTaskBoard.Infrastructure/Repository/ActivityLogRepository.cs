@@ -15,6 +15,16 @@ namespace MyTaskBoard.Infrastructure.Repository
             _context = context;
         }
 
+        public async Task<IEnumerable<ActivityLog>> GetAllPagedAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.ActivityLogs
+                .OrderByDescending(al => al.Timestamp)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
+
+            return await query.ToListAsync();
+        }
+
         public async Task<IEnumerable<ActivityLog>> GetByCardIdAsync(Guid cardId)
         {
             return await _context.ActivityLogs.Where(al => al.CardId == cardId).ToListAsync();

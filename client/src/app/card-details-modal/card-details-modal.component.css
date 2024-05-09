@@ -1,0 +1,117 @@
+.select{
+    display: flex;
+    flex-direction: row;
+}
+
+.description{
+    display: flex;
+    flex-direction: column;
+}
+
+.description-input{
+    display: flex;
+}
+
+.header{
+    display: flex;
+    flex-direction: row;
+    grid-column: 1;
+    column-span: 3;
+    background-color: gray;
+    min-height: 40px;
+    width: 950px;
+}
+
+.grid-container {
+    width: 950px;
+    height: 600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr;
+  }
+
+.labels {
+    display: flex;
+    flex-direction: column;
+  }
+
+.label-item{
+    display: flex;
+    margin: 10px;
+    flex-direction: row;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+  }
+
+.due-date {
+    display: flex;
+    align-items: center;
+  }
+
+.description {
+    grid-column: 1 / span 2;
+  }
+
+.form{
+    padding: 30px;
+}
+
+.div-form{
+    min-width: 600px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 10px;
+}
+
+.edit-button {
+    display: inline;
+    grid-column: 2;
+    justify-content: center;
+    height: 40px;
+    width: 100px;
+    padding: 4px;
+    background-color: rgb(255, 255, 255);
+    border: 2px solid rgb(216, 216, 216);
+    border-radius: 5px;
+}
+
+.card-name{
+    grid-column: 1;
+    column-span: 2;
+}
+
+.activity-panel {
+    grid-column: 3;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 600px;
+    margin: 0px; 
+    padding: 10px;
+    grid-row: 1 / span 3;
+    background-color: rgb(218, 218, 218);
+    overflow-y: scroll;
+}
+
+.activity-list {
+    margin-left: 10px;
+    max-height: 920px;
+  }
+  
+.details{
+    margin: 30px;
+    grid-column: 1 / span 2;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.icon{
+    margin-top: 5px;
+    margin-bottom: auto;
+    font-size: 1.2em;
+    vertical-align: middle;
+}

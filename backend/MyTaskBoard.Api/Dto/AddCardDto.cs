@@ -9,6 +9,6 @@ namespace MyTaskBoard.Api.Dto
         public string Description { get; set; }
         public DateTime DueDate { get; set; }
         public Priority Priority { get; set; }
-        public Guid BoardListId { get; set; }
+        public string BoardListId { get; set; }
     }
 }

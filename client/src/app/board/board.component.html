@@ -1,0 +1,24 @@
+<div class="board-container">
+    <ul class="horizontal-list" style="float:inline-start; position: relative;">
+        <ng-container *ngFor="let list of lists">
+            <app-list [list]="list"></app-list>
+        </ng-container>
+        <div class="list-placeholder" *ngIf="!addingList; else addListForm">
+            <div class="list-header">
+                <h4>Add another list</h4>
+                <button mat-icon-button aria-label="Add List" (click)="toggleAddingList()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        </div>
+        <ng-template #addListForm>
+            <div class="add-list-form">
+                <input type="text" [(ngModel)]="addModel.name" placeholder="Enter list title" class="list-input">
+                <div class="button-container">
+                    <button (click)="addList()" class="add-button">Add List</button>
+                    <button (click)="cancelAddList()" class="cancel-button">Cancel</button>
+                </div>
+            </div>
+        </ng-template>
+    </ul>
+</div>

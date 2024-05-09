@@ -15,7 +15,6 @@ namespace MyTaskBoard.Core.Entity
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedAt { get; set; }
-        public List<ActivityLog> ActivityLogs { get; set; }
         public BoardList BoardList { get; set; }
     }
 }

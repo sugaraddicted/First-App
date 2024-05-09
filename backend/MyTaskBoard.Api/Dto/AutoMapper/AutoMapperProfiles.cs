@@ -15,7 +15,8 @@ namespace MyTaskBoard.Api.Dto.AutoMapper
             CreateMap<Card, CardDto>();
             CreateMap<CardDto, Card>();
 
-            CreateMap<AddCardDto, Card>();
+            CreateMap<AddCardDto, Card>().ForMember(dest => dest.BoardListId,
+                opt => opt.MapFrom(src => new Guid(src.BoardListId)));
             CreateMap<Card, AddCardDto>();
 
             CreateMap<UpdateCardDto, Card>();

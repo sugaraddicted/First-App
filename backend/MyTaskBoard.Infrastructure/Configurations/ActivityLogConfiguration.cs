@@ -23,10 +23,6 @@ namespace MyTaskBoard.Infrastructure.Configurations
 
             builder.Property(e => e.Timestamp)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-            builder.HasOne(al => al.Card)
-                .WithMany(c => c.ActivityLogs)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

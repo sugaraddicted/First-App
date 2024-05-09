@@ -23,7 +23,7 @@ namespace MyTaskBoard.Api.Controllers
             _boardListRepository = boardListRepository;
         }
 
-        [HttpGet("list/{listId}")]
+        [HttpGet("/{listId}")]
         public async Task<IActionResult> GetCardsByListId(Guid listId)
         {
             var cards = await _cardRepository.GetByBoardListIdAsync(listId);
@@ -42,7 +42,7 @@ namespace MyTaskBoard.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCard(AddCardDto cardDto)
         {
-            var boardList = await _boardListRepository.GetByIdAsync(cardDto.BoardListId);
+            var boardList = await _boardListRepository.GetByIdAsync(new Guid(cardDto.BoardListId));
             var card = _mapper.Map<Card>(cardDto);
             await _cardRepository.AddAsync(card);
 
@@ -62,7 +62,7 @@ namespace MyTaskBoard.Api.Controllers
             return CreatedAtAction(nameof(GetCardsByListId), new { listId = card.BoardListId }, cardDtoWithId);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateCard(Guid id, UpdateCardDto cardDto)
         {
             if (id != cardDto.Id)

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
@@ -12,7 +12,6 @@ import { HeaderComponent } from './header/header.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -21,6 +20,12 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { CardModalComponent } from './card-modal/card-modal.component';
 import { CardDetailsModalComponent } from './card-details-modal/card-details-modal.component';
+import { HistorySidebarComponent } from './history-sidebar/history-sidebar.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { listsReducer } from './store/reducers/lists.reduces';
 
 @NgModule({
   declarations: [
@@ -32,6 +37,7 @@ import { CardDetailsModalComponent } from './card-details-modal/card-details-mod
     HeaderComponent,
     CardModalComponent,
     CardDetailsModalComponent,
+    HistorySidebarComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,13 +47,18 @@ import { CardDetailsModalComponent } from './card-details-modal/card-details-mod
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
-    DragDropModule,
     FormsModule,
     MatInputModule,
     MatSelectModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    StoreModule.forRoot({
+      lists: listsReducer
+    }, {}),
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   exports:[
     CardModalComponent,

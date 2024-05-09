@@ -1,0 +1,27 @@
+<div *ngIf="activityLog" class="grid-container">
+    <div class="activity-message">
+        <div style="grid-column: 1; color: gray;" *ngIf="activityLog.action === 'You added'">
+            {{activityLog.action}} <mat-icon class="icon">adjust</mat-icon><b>{{cardName}}</b>  to  <b>{{activityLog.after}}</b>
+        </div>
+        <div style="grid-column: 1; color: gray;" *ngIf="activityLog.action === 'You deleted'">
+            {{activityLog.action}} <mat-icon class="icon">adjust</mat-icon><b>{{cardName}}</b>
+        </div>
+        <div style="grid-column: 1; color: gray;" *ngIf="activityLog.action === 'You renamed'"> 
+            <p>{{activityLog.action}} <mat-icon class="icon">adjust</mat-icon><b>{{cardName}}</b>  
+            from  <b>{{activityLog.before}}</b>  to  <b>{{activityLog.after}}</b></p>
+        </div>
+        <div style="grid-column: 1; color: gray;" *ngIf="activityLog.action === 'You changed Due Date'  
+        || activityLog.action === 'You changed priority'
+        || activityLog.action === 'You changed Description'"> 
+            <p> {{activityLog.action}}  from  <b>{{activityLog.before}}</b>  to  <b>{{activityLog.after}}</b>
+            <p *ngIf="cardName != 'this card'">  at  <mat-icon class="icon">adjust</mat-icon><b>{{cardName}}</b></p>
+        </div>
+        <div style="grid-column: 1; color: gray;" *ngIf="activityLog.action === 'You moved'"> 
+            {{activityLog.action}} <mat-icon class="icon">adjust</mat-icon><b>{{cardName}}</b> 
+             from  <b>{{activityLog.before}}</b>  to  <b>{{activityLog.after}}</b>
+        </div>
+    </div>
+    <div class="activity-timestamp">
+        <p>{{ activityLog.timestamp | date: 'MMM d, h:mm a' }}</p>
+    </div>
+</div>

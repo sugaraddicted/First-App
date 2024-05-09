@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using MyTaskBoard.Api.Dto;
 using MyTaskBoard.Infrastructure.Repository.Interfaces;
 
 namespace MyTaskBoard.Api.Controllers
@@ -8,17 +10,28 @@ namespace MyTaskBoard.Api.Controllers
     public class ActivityLogController : ControllerBase
     {
         private readonly IActivityLogRepository _activityLogRepository;
+        private readonly IMapper _mapper;
 
-        public ActivityLogController(IActivityLogRepository activityLogRepository)
+        public ActivityLogController(IActivityLogRepository activityLogRepository, IMapper mapper)
         {
             _activityLogRepository = activityLogRepository;
+            _mapper = mapper;
         }
 
-        [HttpGet("cards/{cardId}")]
+        [HttpGet("{cardId}")]
         public async Task<IActionResult> GetByCardId(Guid cardId)
         {
             var activityLogs = await _activityLogRepository.GetByCardIdAsync(cardId);
-            return Ok(activityLogs);
+            var activityLogDtos = _mapper.Map<IEnumerable<ActivityLogDto>>(activityLogs);
+            return Ok(activityLogDtos);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
+        {
+            var activityLogs = await _activityLogRepository.GetAllPagedAsync(pageNumber, pageSize);
+            var activityLogDtos = _mapper.Map<IEnumerable<ActivityLogDto>>(activityLogs);
+            return Ok(activityLogDtos);
         }
     }
 }

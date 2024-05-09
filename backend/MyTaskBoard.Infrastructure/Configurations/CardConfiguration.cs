@@ -18,11 +18,6 @@ namespace MyTaskBoard.Infrastructure.Configurations
 
             builder.HasOne(c => c.BoardList)
                 .WithMany(l => l.Cards);
-
-            builder.HasMany(c => c.ActivityLogs)
-                .WithOne(al => al.Card)
-                .HasForeignKey(al=>  al.CardId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

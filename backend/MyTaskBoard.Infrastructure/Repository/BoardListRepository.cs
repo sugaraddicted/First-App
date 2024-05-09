@@ -17,7 +17,12 @@ namespace MyTaskBoard.Infrastructure.Repository
 
         public override async Task<IEnumerable<BoardList>> GetAllAsync()
         {
-            return await _context.BoardLists.Include(b => b.Cards).ToListAsync();
+            var lists = await _context.BoardLists.Include(b => b.Cards).ToListAsync();
+            foreach (var list in lists)
+            {
+                list.Cards.OrderByDescending(c => c.DueDate);
+            }
+            return lists.OrderBy(l => l.CreatedAt);
         }
     }
 }

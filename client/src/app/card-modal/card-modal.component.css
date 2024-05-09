@@ -1,0 +1,94 @@
+.select{
+    display: flex;
+    flex-direction: row;
+    margin: 0px;
+    padding: auto;
+}
+
+.description{
+    display: flex;
+    flex-direction: column;
+}
+
+.description-input{
+    display: flex;
+}
+
+.header{
+    background-color: gray;
+    min-height: 40px;
+    width: auto;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 10px;
+  }
+
+.labels {
+    display: flex;
+    flex-direction: column;
+  }
+
+.label-item{
+    display: flex;
+    margin: 10px;
+    flex-direction: row;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+  }
+
+.due-date {
+    margin: 0px;
+    display: flex;
+    align-items: center;
+  }
+
+.description {
+    grid-column: 1 / span 2;
+  }
+
+.form{
+    padding: 30px;
+}
+
+.div-form{
+    border-radius: 70px;
+    min-width: 600px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 10px;
+}
+
+.save-button{
+    flex-grow: 1;
+    margin-top: 5px;
+    margin-right: 5px;
+    background-color: gray;
+    color: white;
+    padding: 4px;
+    border: 0px;
+    border-radius: 5px;
+}
+.cancel-button {
+    flex-grow: 1;
+    padding: 4px;
+    margin-top: 5px;
+    margin-left: 5px;
+    background-color: rgb(255, 255, 255);
+    border: 2px solid rgb(216, 216, 216);
+    border-radius: 5px;
+}
+
+.name-input {
+    font-size: 20px; /* Adjust the font size as needed */
+    border: none; /* Remove the border */
+    text-decoration: none; 
+    background-color: white;/* Remove any text decoration */
+}

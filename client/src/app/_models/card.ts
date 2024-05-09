@@ -5,5 +5,5 @@ export interface Card{
     priority: number,
     boardListId: string,
     dueDate: Date,
-    createdAt: Date
+    createdAt?: Date
 }

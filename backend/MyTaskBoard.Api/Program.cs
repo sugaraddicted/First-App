@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyTaskBoard.Api.Dto.AutoMapper;
+using MyTaskBoard.Api.Middleware;
 using MyTaskBoard.Infrastructure.Persistence;
 using MyTaskBoard.Infrastructure.Repository;
 using MyTaskBoard.Infrastructure.Repository.Interfaces;
@@ -34,6 +35,7 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
 app.UseSwagger();
 app.UseSwaggerUI();

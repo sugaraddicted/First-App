@@ -5,5 +5,5 @@ export interface ActivityLog{
     cardName: string,
     before: string,
     after: string,
-    timestemp: Date
+    timestamp: Date
 }

@@ -1,0 +1,19 @@
+<div class="sidebar">
+    <div class="header">
+      <h3>History</h3>
+      <button mat-icon-button class="close-button" (click)="onCloseSidebar()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="activity-list" style="padding: 10px; overflow-y: auto;">
+      <ul>
+        <li *ngFor="let activity of activityLogs" style="margin-top: 8px;">
+          <app-activity  [activityLog]="activity" [cardName]="activity.cardName"></app-activity>
+        </li>
+      </ul>
+    </div>
+    <button class="load-button" (click)="loadMore()">
+      <mat-icon style="margin-right: 5px;">refresh</mat-icon> Load More
+    </button>
+</div>
+  

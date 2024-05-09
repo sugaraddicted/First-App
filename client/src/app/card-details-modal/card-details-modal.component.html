@@ -1,0 +1,60 @@
+<div class="header">
+    <button mat-icon-button class="close-button" (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<div class="grid-container">
+    <div class="details">
+        <h4 style="grid-column: 1;">{{card?.name}}</h4>
+        <button class="edit-button" (click)="editCard()">
+            <mat-icon class="icon" style="margin-right: 5px; ">edit</mat-icon> Edit
+        </button>
+    <div class="labels" style="grid-column: 1;">
+        <div class="label-item">
+            <mat-icon class="label-icon">list</mat-icon>
+            <p style="margin-left: 5px;">List</p>
+        </div>
+        <div class="label-item">
+            <mat-icon class="label-icon">calendar_today</mat-icon>
+            <p style="margin-left: 5px;">Due Date</p>
+        </div>
+        <div class="label-item">
+            <mat-icon class="label-icon">label</mat-icon>
+            <p style="margin-left: 5px;">Priority</p>
+        </div>
+    </div>
+    <div style="grid-column: 2;">
+        <form #cardDetailsForm="ngForm">
+            <div class="select">
+                <mat-form-field style="height: 50px; display: inline;">
+                    <mat-select [(ngModel)]="selectedList" name="selectedList">
+                        <mat-option *ngFor="let list of lists" [value]="list.id" (click)="updateCard(list.id)">{{ list.name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </form>
+        <div style="display: flex; align-items: center; height: 50px;">
+            <p style="margin-top: 30px;">{{ this.card?.dueDate | date: 'MMM d'}}</p>
+        </div>
+        <div style="height: 50px; margin-top: 30px;">
+            <p>{{selectedPriority}}</p>
+        </div>
+    </div>
+    <div class="description" style="grid-column: 1 / span 2;">
+        <h4>Description</h4>
+        <p>{{card?.description}}</p>
+    </div>  
+    </div>
+    <div class="activity-panel">
+        <h3>Activity</h3>
+        <div class="activity-list" style="padding: 10px;">
+            <ng-container *ngFor="let activity of activityLogs">
+                <ul>
+                    <li>
+                        <app-activity [activityLog]="activity"></app-activity>
+                    </li>
+                </ul>    
+            </ng-container>
+        </div>
+    </div> 
+</div>

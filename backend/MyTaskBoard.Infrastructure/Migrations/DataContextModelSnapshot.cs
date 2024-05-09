@@ -55,8 +55,6 @@ namespace MyTaskBoard.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CardId");
-
                     b.ToTable("ActivityLogs");
                 });
 
@@ -115,17 +113,6 @@ namespace MyTaskBoard.Infrastructure.Migrations
                     b.ToTable("Cards");
                 });
 
-            modelBuilder.Entity("MyTaskBoard.Core.Entity.ActivityLog", b =>
-                {
-                    b.HasOne("MyTaskBoard.Core.Entity.Card", "Card")
-                        .WithMany("ActivityLogs")
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Card");
-                });
-
             modelBuilder.Entity("MyTaskBoard.Core.Entity.Card", b =>
                 {
                     b.HasOne("MyTaskBoard.Core.Entity.BoardList", "BoardList")
@@ -140,11 +127,6 @@ namespace MyTaskBoard.Infrastructure.Migrations
             modelBuilder.Entity("MyTaskBoard.Core.Entity.BoardList", b =>
                 {
                     b.Navigation("Cards");
-                });
-
-            modelBuilder.Entity("MyTaskBoard.Core.Entity.Card", b =>
-                {
-                    b.Navigation("ActivityLogs");
                 });
 #pragma warning restore 612, 618
         }

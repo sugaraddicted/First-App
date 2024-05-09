@@ -1,0 +1,29 @@
+<div *ngIf="card" class="card">
+    <div class="card-header" style="padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <a style="margin: 0; color: black; font-size: 26px;"  (click)="openCardDetailsModal(card)">{{ card.name }}</a>
+        <button mat-icon-button [matMenuTriggerFor]="listMenu" aria-label="Menu" style="cursor: pointer;">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #listMenu="matMenu">
+          <button mat-menu-item (click)="editCard()"><mat-icon>create</mat-icon> Edit</button>
+          <button mat-menu-item (click)="deleteCard()" style="color: red"><mat-icon style="color: red">delete_outline</mat-icon> Delete</button>
+        </mat-menu>
+    </div>
+    <div class="card-content" style="padding: 10px;">
+        <p style="text-wrap: wrap;">{{ card.description }}</p>
+        <div style="display: flex; align-items: center;">
+            <mat-icon style="margin-right: 5px;">event</mat-icon>
+            <p style="margin-top: 15px; margin-left: 10px;">{{ card.dueDate | date: 'MMM d' }}</p>
+        </div>
+        <div class="priority-badge">
+            <span>{{ getPriorityCaption(card.priority) }}</span>
+        </div>
+        <button class="move-to-button" [matMenuTriggerFor]="moveToMenu">
+          Move to 
+          <mat-icon style="margin-left: auto;">keyboard_arrow_down</mat-icon>
+          </button>      
+          <mat-menu #moveToMenu="matMenu">
+            <button mat-menu-item *ngFor="let list of lists" (click)="updateCard(list.id)" >{{list.name}}</button>
+          </mat-menu>
+    </div>
+</div>
