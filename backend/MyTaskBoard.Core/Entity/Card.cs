@@ -11,10 +11,12 @@ namespace MyTaskBoard.Core.Entity
         public string Description { get; set; }
         public DateTime DueDate { get; set; }
         public Priority Priority { get; set; }
-        public Guid BoardListId { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedAt { get; set; }
+        public Guid BoardListId { get; set; }
+        public Guid BoardId { get; set; }
         public BoardList BoardList { get; set; }
+        public Board Board { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using MyTaskBoard.Core.Entity.Interfaces;
+﻿using MyTaskBoard.Core.Entity.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyTaskBoard.Core.Entity
@@ -15,6 +14,8 @@ namespace MyTaskBoard.Core.Entity
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Timestamp { get; set; }
         public Guid CardId { get; set; }
+        public Guid BoardId { get; set; }
+        public Board Board { get; set; }
     }
 
 }
