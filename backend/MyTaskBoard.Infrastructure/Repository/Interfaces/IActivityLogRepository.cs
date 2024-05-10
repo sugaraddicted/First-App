@@ -7,6 +7,6 @@ namespace MyTaskBoard.Infrastructure.Repository.Interfaces
     {
         Task<IEnumerable<ActivityLog>> GetByCardIdAsync(Guid cardId);
 
-        Task<IEnumerable<ActivityLog>> GetAllPagedAsync(int pageNumber, int pageSize);
+        Task<IEnumerable<ActivityLog>> GetByBoardIdAsync(int pageNumber, int pageSize, Guid boardId);
     }
 }

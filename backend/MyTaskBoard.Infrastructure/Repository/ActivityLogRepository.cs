@@ -15,9 +15,10 @@ namespace MyTaskBoard.Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<ActivityLog>> GetAllPagedAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<ActivityLog>> GetByBoardIdAsync(int pageNumber, int pageSize, Guid boardId)
         {
             var query = _context.ActivityLogs
+                .Where(al => al.BoardId == boardId)
                 .OrderByDescending(al => al.Timestamp)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);

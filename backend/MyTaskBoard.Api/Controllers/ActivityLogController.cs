@@ -27,9 +27,9 @@ namespace MyTaskBoard.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetByBoardId(Guid boardId, int pageNumber = 1, int pageSize = 10)
         {
-            var activityLogs = await _activityLogRepository.GetAllPagedAsync(pageNumber, pageSize);
+            var activityLogs = await _activityLogRepository.GetByBoardIdAsync(pageNumber, pageSize, boardId);
             var activityLogDtos = _mapper.Map<IEnumerable<ActivityLogDto>>(activityLogs);
             return Ok(activityLogDtos);
         }
