@@ -8,5 +8,6 @@ namespace MyTaskBoard.Core.Entity
         public string Name { get; set; }
         public List<Card> Cards { get; set; }
         public List<BoardList> Lists { get; set; }
+        public List<ActivityLog> ActivityLogs { get; set; }
     }
 }

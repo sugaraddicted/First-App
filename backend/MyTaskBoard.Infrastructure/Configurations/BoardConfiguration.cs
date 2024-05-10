@@ -13,6 +13,11 @@ namespace MyTaskBoard.Infrastructure.Configurations
             builder.Property(b => b.Id)
                 .ValueGeneratedOnAdd();
 
+            builder.HasMany(l => l.ActivityLogs)
+                .WithOne(c => c.Board)
+                .HasForeignKey(c => c.BoardId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasMany(l => l.Lists)
                 .WithOne(c => c.Board)
                 .HasForeignKey(c => c.BoardId)
