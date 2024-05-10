@@ -22,6 +22,7 @@ builder.Services.AddPooledDbContextFactory<DataContext>(options =>
 });
 builder.Services.AddCors();
 builder.Services.AddScoped<IBoardListRepository, BoardListRepository>();
+builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
 
