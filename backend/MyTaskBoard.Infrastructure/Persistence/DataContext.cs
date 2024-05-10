@@ -16,11 +16,13 @@ namespace MyTaskBoard.Infrastructure.Persistence
         {
             modelBuilder.HasPostgresEnum<Priority>();
 
+            modelBuilder.ApplyConfiguration(new BoardConfiguration());
             modelBuilder.ApplyConfiguration(new BoardListConfiguration());
             modelBuilder.ApplyConfiguration(new CardConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityLogConfiguration());
         }
 
+        public DbSet<Board> Boards { get; set; }
         public DbSet<BoardList> BoardLists { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
