@@ -10,6 +10,9 @@ namespace MyTaskBoard.Api.Dto.AutoMapper
             CreateMap<BoardListDto, BoardList>();
             CreateMap<BoardList, BoardListDto>();
 
+            CreateMap<BoardDto, Board>();
+            CreateMap<Board, BoardDto>();
+
             CreateMap<AddBoardListDto, BoardList>();
 
             CreateMap<Card, CardDto>();
