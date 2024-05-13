@@ -24,5 +24,15 @@ namespace MyTaskBoard.Infrastructure.Repository
             }
             return lists.OrderBy(l => l.CreatedAt);
         }
+
+        public async Task<IEnumerable<BoardList>> GetByBoardIdAsync(Guid boardId)
+        {
+            var lists = await _context.BoardLists.Where(l => l.BoardId == boardId).Include(b => b.Cards).ToListAsync();
+            foreach (var list in lists)
+            {
+                list.Cards.OrderByDescending(c => c.DueDate);
+            }
+            return lists.OrderBy(l => l.CreatedAt);
+        }
     }
 }
