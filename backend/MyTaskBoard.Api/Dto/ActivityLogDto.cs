@@ -9,5 +9,6 @@
         public string After { get; set; }
         public DateTime Timestamp { get; set; }
         public Guid CardId { get; set; }
+        public Guid BoardId { get; set; }
     }
 }

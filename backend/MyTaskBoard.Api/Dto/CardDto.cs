@@ -10,7 +10,8 @@ namespace MyTaskBoard.Api.Dto
         public DateTime DueDate { get; set; }
         public Priority Priority { get; set; }
         public Guid BoardListId { get; set; }
+        public Guid BoardId { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<ActivityLogDto> ActivityLogs { get; set; }
+        public List<ActivityLogDto>? ActivityLogs { get; set; }
     }
 }
