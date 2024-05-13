@@ -42,9 +42,10 @@ namespace MyTaskBoard.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCard(AddCardDto cardDto)
         {
-            var boardList = await _boardListRepository.GetByIdAsync(new Guid(cardDto.BoardListId));
+            var boardList = await _boardListRepository.GetByIdAsync(cardDto.BoardListId);
             var card = _mapper.Map<Card>(cardDto);
             await _cardRepository.AddAsync(card);
+            
 
             var activityLogDto = new ActivityLogDto()
             {
@@ -52,7 +53,8 @@ namespace MyTaskBoard.Api.Controllers
                 CardName = card.Name,
                 Timestamp = DateTime.UtcNow,
                 After = boardList.Name,
-                CardId = card.Id
+                CardId = card.Id,
+                BoardId = card.BoardId
             };
 
             var activityLog = _mapper.Map<ActivityLog>(activityLogDto);
@@ -84,6 +86,8 @@ namespace MyTaskBoard.Api.Controllers
         public async Task<IActionResult> DeleteCard(Guid id)
         {
             var existingCard = await _cardRepository.GetByIdAsync(id);
+            var boardList = await _boardListRepository.GetByIdAsync(existingCard.BoardListId);
+
             if (existingCard == null)
                 return NotFound();
 
@@ -92,7 +96,8 @@ namespace MyTaskBoard.Api.Controllers
                 Action = "You deleted",
                 CardName = existingCard.Name,
                 CardId = existingCard.Id,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                BoardId = existingCard.BoardId
             };
 
             var activityLog = _mapper.Map<ActivityLog>(activityLogDto);
@@ -106,6 +111,7 @@ namespace MyTaskBoard.Api.Controllers
         private async Task LogActivity(Card existingCard, UpdateCardDto newCard)
         { 
             var activityLogs = new List<ActivityLogDto>();
+            var boardList = await _boardListRepository.GetByIdAsync(existingCard.BoardListId);
 
             if (newCard.Name != existingCard.Name)
             {
@@ -114,7 +120,7 @@ namespace MyTaskBoard.Api.Controllers
                     {
                         Action = "You renamed",
                         Before = existingCard.Name,
-                        After = newCard.Name,
+                        After = newCard.Name
                     });
             }
 
@@ -170,6 +176,7 @@ namespace MyTaskBoard.Api.Controllers
                 activityLogDto.CardId = existingCard.Id;
                 activityLogDto.CardName = newCard.Name;
                 activityLogDto.Timestamp = DateTime.UtcNow;
+                activityLogDto.BoardId = existingCard.BoardId;
 
                 var activityLog = _mapper.Map<ActivityLog>(activityLogDto);
                 await _activityLogRepository.AddAsync(activityLog);
