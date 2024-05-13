@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-
 using Microsoft.AspNetCore.Mvc;
 using MyTaskBoard.Api.Dto;
 using MyTaskBoard.Core.Entity;
@@ -21,10 +20,10 @@ namespace MyTaskBoard.Api.Controllers
             _boardListRepository = boardListRepository;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetBoardLists()
+        [HttpGet("board/{boardId}")]
+        public async Task<IActionResult> GetByBoardId(Guid boardId)
         {
-            var boardLists = await _boardListRepository.GetAllAsync();
+            var boardLists = await _boardListRepository.GetByBoardIdAsync(boardId);
             var boardListDtos = _mapper.Map<IEnumerable<BoardListDto>>(boardLists);
             return Ok(boardListDtos);
         }

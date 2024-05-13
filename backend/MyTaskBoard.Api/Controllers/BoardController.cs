@@ -38,7 +38,7 @@ namespace MyTaskBoard.Api.Controllers
             return Ok(boardDto);
         }
 
-        [HttpPost]
+        [HttpPost("{name}")]
         public async Task<IActionResult> AddBoardList(string name)
         {
             var board = new Board
