@@ -4,4 +4,5 @@ export interface CardDto {
     dueDate: Date;
     priority: number;
     boardListId: string;
+    boardId: string;
   }
