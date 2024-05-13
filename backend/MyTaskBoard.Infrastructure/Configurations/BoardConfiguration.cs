@@ -22,11 +22,6 @@ namespace MyTaskBoard.Infrastructure.Configurations
                 .WithOne(c => c.Board)
                 .HasForeignKey(c => c.BoardId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(l => l.Cards)
-                .WithOne(c => c.Board)
-                .HasForeignKey(c => c.BoardListId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
