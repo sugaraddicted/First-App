@@ -3,12 +3,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { List } from '../_models/list';
 import { Card } from '../_models/card';
-import { BoardService } from '../_services/board.service';
 import { CardService } from '../_services/card.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CardDto } from '../_models/cardDto';
 import * as ListsActions from '../store/actions/lists.action';
 import { Store } from '@ngrx/store';
+import { ListService } from '../_services/list.service';
 
 @Component({
   selector: 'app-card-modal',
@@ -18,23 +18,24 @@ import { Store } from '@ngrx/store';
 export class CardModalComponent implements OnInit {
   card?: Card;
   lists?: List[];
+  boardId = '';
   priorities = ['Low', 'Medium', 'High'];
   cardForm: FormGroup = new FormGroup({});
   isEditing: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<CardModalComponent>, 
-    private boardService: BoardService,
+    private listService: ListService,
     private cardService: CardService,
     private store: Store,
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: { listId: string, card?: Card }
   ) { }
 
   ngOnInit(): void {
     this.createForm();
-    this.loadLists();
-  
+    this.loadList();
+    
     if (this.data && this.data.card) {
       this.card = this.data.card;
       this.isEditing = true;
@@ -43,10 +44,11 @@ export class CardModalComponent implements OnInit {
         description: this.data.card.description,
         dueDate: this.data.card.dueDate,
         priority: this.getPriorityCaption(this.data.card.priority),
-        boardListId: this.data.card.boardListId
+        boardListId: this.data.card.boardListId,
+        boardId: this.data.card.boardId
       });
     }
-    if (this.data && this.data.listId) {
+    if (this.data.listId) {
       this.cardForm.patchValue({
         boardListId: this.data.listId
       });
@@ -67,8 +69,23 @@ export class CardModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  loadLists() {
-    this.boardService.getLists().subscribe(lists => this.lists = lists)
+  loadList() {
+    if(this.data.listId){
+      this.listService.getById(this.data.listId).subscribe({
+        next: list => this.loadLists(list.boardId),
+        error: error => console.error(error)
+      });
+    }
+  }
+
+  loadLists(boardId: string) {
+    if(boardId){
+      this.listService.getListsByBoardId(boardId).subscribe({
+        next: lists => this.lists = lists,
+        error: error => console.error(error)
+      });
+      console.log(this.lists)
+    }
   }
 
   openDatePicker(datePicker: MatDatepicker<Date>) {
@@ -77,35 +94,36 @@ export class CardModalComponent implements OnInit {
 
   addCard(): void {
     if (this.cardForm) {
-      if (this.cardForm.valid) {
+      if (this.cardForm.valid && this.lists) {
         const cardDto: CardDto = {
           name: this.cardForm.value.name,
           description: this.cardForm.value.description,
           dueDate: this.cardForm.value.dueDate,
           priority: this.priorities.indexOf(this.cardForm.value.priority),
-          boardListId: this.cardForm.value.boardListId
+          boardListId: this.cardForm.value.boardListId,
+          boardId: this.lists[0].boardId,
         };
-
         this.cardService.addCard(cardDto).subscribe(() => {
           this.dialogRef.close();
           this.reload();
         });
       }
     }
+    this.reload();
   }
 
   updateCard(): void {
     if (this.cardForm) {
-      if (this.card && this.cardForm.valid) {
+      if (this.card && this.cardForm.valid && this.lists) {
         const cardDto: Card = {
           id: this.card.id,
           name: this.cardForm.value.name,
           description: this.cardForm.value.description,
           dueDate: this.cardForm.value.dueDate,
           priority: this.priorities.indexOf(this.cardForm.value.priority),
-          boardListId: this.cardForm.value.boardListId
+          boardListId: this.cardForm.value.boardListId,
+          boardId: this.lists[0].boardId,
         };
-
         this.cardService.updateCard(cardDto, cardDto.id).subscribe(() => {
           this.dialogRef.close();
           this.reload();

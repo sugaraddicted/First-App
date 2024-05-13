@@ -13,7 +13,7 @@
         </div>
         <ng-template #addListForm>
             <div class="add-list-form">
-                <input type="text" [(ngModel)]="addModel.name" placeholder="Enter list title" class="list-input">
+                <input type="text" [(ngModel)]="newListTitle" placeholder="Enter list title" class="list-input">
                 <div class="button-container">
                     <button (click)="addList()" class="add-button">Add List</button>
                     <button (click)="cancelAddList()" class="cancel-button">Cancel</button>

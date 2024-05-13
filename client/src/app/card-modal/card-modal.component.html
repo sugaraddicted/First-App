@@ -4,7 +4,7 @@
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <form class="form" [formGroup]="cardForm" (ngSubmit)="isEditing ? updateCard() : addCard()">
+    <form class="form" [formGroup]="cardForm" (ngSubmit)="isEditing? updateCard() : addCard()">
         <mat-form-field class="name-input">
             <input matInput placeholder="Card Name" formControlName="name" required>
             <mat-error *ngIf="cardForm.controls['name'].invalid && cardForm.controls['name'].touched">

@@ -7,6 +7,8 @@ import { ActivityService } from '../_services/activity.service';
 import { ActivityLog } from '../_models/activityLog';
 import { CardService } from '../_services/card.service';
 import { CardModalComponent } from '../card-modal/card-modal.component';
+import { ListService } from '../_services/list.service';
+
 
 @Component({
   selector: 'app-card-details-modal',
@@ -26,15 +28,15 @@ export class CardDetailsModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<CardDetailsModalComponent>, 
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private boardService: BoardService,
+    private listService: ListService,
     private activityService: ActivityService,
     public cardService: CardService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.loadLists();
     this.card = this.data.card;
+    this.loadLists();
     this.loadActivityLogs();
     if(this.card){
       this.selectedList = this.card.boardListId;
@@ -57,12 +59,13 @@ export class CardDetailsModalComponent implements OnInit {
   }
 
   loadLists(){
-    this.boardService.getLists().subscribe(lists => this.lists = lists)
+    if(this.card)
+    this.listService.getListsByBoardId(this.card.boardId).subscribe(lists => this.lists = lists)
   }
 
   loadActivityLogs(){
     if(this.card)
-      this.activityService.getActivityLogsByCardId(this.card.id).subscribe({
+      this.activityService.getByCardId(this.card.id).subscribe({
     next: activityLogs => this.activityLogs = activityLogs,
     error: error => console.log(this.activityLogs)
     });
@@ -87,7 +90,7 @@ export class CardDetailsModalComponent implements OnInit {
 
   openEditCardModal(card: Card) {
     this.dialog.open(CardModalComponent, {
-      data: { card: card }
+      data: {listId: card.boardListId, card: card }
     });
   }
 }

@@ -1,7 +1,7 @@
 <div *ngIf="list" class="list-container">
     <div *ngIf="!isEditing" class="list-header">
         <h4>{{ list.name }}</h4>
-        <p style="margin-left: auto;margin-top: auto; font-size: 18px; height:20px;">{{list.cards.length}}</p>
+        <p style="margin-left: auto;margin-top: auto; font-size: 18px; height:20px;">{{list.cards?.length}}</p>
         <button mat-icon-button [matMenuTriggerFor]="listMenu" aria-label="Menu">
           <mat-icon>more_vert</mat-icon>
         </button>

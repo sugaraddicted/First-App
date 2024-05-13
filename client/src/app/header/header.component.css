@@ -19,6 +19,35 @@
     align-items: center;
 }
 
+.board-input { 
+    height: 100%;
+    margin-top: 0px;
+    margin-left: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.save-button{
+    flex-grow: 1;
+    margin-left: 5px;
+    background-color: gray;
+    color: white;
+    height: 100%;
+    padding: 4px;
+    border: 0px;
+    border-radius: 5px;
+}
+.cancel-button {
+    flex-grow: 1;
+    padding: 4px;
+    margin-left: 5px;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    border: 2px solid rgb(216, 216, 216);
+    border-radius: 5px;
+}
+
 .sidebar {
     position: fixed;
     top: 0;
@@ -28,3 +57,7 @@
     background-color: #f0f0f0;
     overflow-y: auto;
   }
+
+.edit-board-form{
+    width: 100%;
+}

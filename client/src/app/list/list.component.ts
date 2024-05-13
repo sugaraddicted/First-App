@@ -32,7 +32,6 @@ export class ListComponent implements OnInit {
 
   saveEdit() {
     if (this.editedListTitle.trim() === '') {
-      // Handle empty title
       return;
     }
   
@@ -68,20 +67,21 @@ export class ListComponent implements OnInit {
   }
 
   openAddCardModal() {
-    const dialogRef = this.dialog.open(CardModalComponent, {
-      data: { listId: this.list?.id }
+    if(this.list && this.list.id){
+      const dialogRef = this.dialog.open(CardModalComponent, {
+      data: { listId: this.list.id }
     });
     
     dialogRef.afterClosed().subscribe((result: Card | undefined) => {
       if (result) {
-        // Optionally, update the UI with the new card
       }
-    });
+    });}
   }
   
   openEditCardModal(card: Card) {
+    if(this.list)
     this.dialog.open(CardModalComponent, {
-      data: { card: card }
+      data: { listId: card.boardListId, card: card}
     });
   }
 }

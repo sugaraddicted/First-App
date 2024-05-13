@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivityService } from '../_services/activity.service';
 import { ActivityLog } from '../_models/activityLog';
 
@@ -9,6 +9,7 @@ import { ActivityLog } from '../_models/activityLog';
 })
 export class HistorySidebarComponent implements OnInit{
   @Output() closeSidebar: EventEmitter<void> = new EventEmitter<void>();
+  @Input() boardId?: string;
   activityLogs: ActivityLog[] = [];
   pageNumber = 1;
   pageSize = 10;
@@ -20,7 +21,8 @@ export class HistorySidebarComponent implements OnInit{
   }
 
   loadActivityLogs(){
-    this.activityService.getActivityLogs(this.pageNumber, this.pageSize).subscribe({
+    if(this.boardId)
+    this.activityService.getByBoardId(this.boardId, this.pageNumber, this.pageSize).subscribe({
     next: newActivityLogs => {
       this.activityLogs = this.activityLogs?.concat(newActivityLogs);
     },

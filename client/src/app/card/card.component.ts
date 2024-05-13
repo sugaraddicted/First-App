@@ -2,10 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Card } from '../_models/card';
 import { CardDetailsModalComponent } from '../card-details-modal/card-details-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { BoardService } from '../_services/board.service';
 import { List } from '../_models/list';
 import { CardService } from '../_services/card.service';
 import { Router } from '@angular/router';
+import { ListService } from '../_services/list.service';
 
 @Component({
   selector: 'app-card',
@@ -19,7 +19,10 @@ export class CardComponent implements OnInit{
 
   selectedOption: string = ''; 
 
-  constructor(public dialog: MatDialog, public boardService: BoardService, public cardService: CardService, public router: Router){}
+  constructor(public dialog: MatDialog, 
+    public listService: ListService, 
+    public cardService: CardService, 
+    public router: Router){}
   ngOnInit(): void {
     this.loadLists();
   }
@@ -45,7 +48,7 @@ export class CardComponent implements OnInit{
   }
 
   openCardDetailsModal(card: Card) {
-    this.dialog.open(CardDetailsModalComponent, { data: { card: card } });
+    this.dialog.open(CardDetailsModalComponent, { data: { listId: card.boardId ,card: card } });
   }
 
   reloadPage(): void {
@@ -53,7 +56,8 @@ export class CardComponent implements OnInit{
   }
 
   loadLists(){
-    this.boardService.getLists().subscribe(lists => this.lists = lists)
+    if(this.card)
+      this.listService.getListsByBoardId(this.card.boardId).subscribe(lists => this.lists = lists)
   }
   
   getPriorityCaption(priority: number): string {
