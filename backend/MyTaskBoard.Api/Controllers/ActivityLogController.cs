@@ -26,7 +26,7 @@ namespace MyTaskBoard.Api.Controllers
             return Ok(activityLogDtos);
         }
 
-        [HttpGet]
+        [HttpGet("board/{boardId}")]
         public async Task<IActionResult> GetByBoardId(Guid boardId, int pageNumber = 1, int pageSize = 10)
         {
             var activityLogs = await _activityLogRepository.GetByBoardIdAsync(pageNumber, pageSize, boardId);
