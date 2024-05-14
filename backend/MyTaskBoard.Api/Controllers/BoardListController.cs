@@ -49,7 +49,7 @@ namespace MyTaskBoard.Api.Controllers
             return CreatedAtAction(nameof(GetBoardList), new { id = boardListDto.Id }, boardListDto);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateBoardList(Guid id, BoardListDto boardListDto)
         {
             if (id != boardListDto.Id)
