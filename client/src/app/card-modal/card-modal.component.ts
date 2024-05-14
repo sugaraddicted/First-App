@@ -6,7 +6,7 @@ import { Card } from '../_models/card';
 import { CardService } from '../_services/card.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CardDto } from '../_models/cardDto';
-import * as ListsActions from '../store/actions/lists.action';
+import * as BoardActions from '../store/actions/boards.actions';
 import { Store } from '@ngrx/store';
 import { ListService } from '../_services/list.service';
 
@@ -84,7 +84,6 @@ export class CardModalComponent implements OnInit {
         next: lists => this.lists = lists,
         error: error => console.error(error)
       });
-      console.log(this.lists)
     }
   }
 
@@ -104,12 +103,11 @@ export class CardModalComponent implements OnInit {
           boardId: this.lists[0].boardId,
         };
         this.cardService.addCard(cardDto).subscribe(() => {
-          this.dialogRef.close();
           this.reload();
+          this.dialogRef.close();
         });
       }
     }
-    this.reload();
   }
 
   updateCard(): void {
@@ -125,15 +123,16 @@ export class CardModalComponent implements OnInit {
           boardId: this.lists[0].boardId,
         };
         this.cardService.updateCard(cardDto, cardDto.id).subscribe(() => {
-          this.dialogRef.close();
           this.reload();
+          this.dialogRef.close();
         });
       }
     }
   }
 
   reload(): void {
-    this.store.dispatch(ListsActions.loadLists());
+    if(this.lists)
+    this.store.dispatch(BoardActions.loadBoardLists({boardId: this.lists[0].boardId}));
   }
 
   getPriorityCaption(priority: number): string {

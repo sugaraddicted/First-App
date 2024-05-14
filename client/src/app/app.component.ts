@@ -1,8 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Store } from '@ngrx/store';
-import * as ListsActions from '../app/store/actions/lists.action'
+import { Component, OnInit } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import * as BoardActions from './store/actions/boards.actions';
 import { Board } from './_models/board';
-import { BoardService } from './_services/board.service';
+import { Observable, map, take } from 'rxjs';
+import { boardsSelector, currentBoardSelector } from './store/selectors/selectors';
+import { AppState } from './store/appSate';
 
 @Component({
   selector: 'app-root',
@@ -10,36 +12,48 @@ import { BoardService } from './_services/board.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  @Output() boardSelected: EventEmitter<string> = new EventEmitter<string>();
-  @Output() boardCreated: EventEmitter<string> = new EventEmitter<string>();
-  @Output() boardDeleted: EventEmitter<void> = new EventEmitter<void>();
-  boards?: Board[];
-  newBoardTitle?: string;
-  currentBoardId: string| null = null;
-  currentBoard?: Board;
-  constructor(private store: Store, 
-    private boardService: BoardService){}
-
-  ngOnInit(): void { 
-    this.currentBoardId = localStorage.getItem('currentBoardId'); 
-    this.loadBoards();
-    this.getBoard();
-  }
-
+  boards$?: Observable<Board[]>;
+  currentBoard$?: Observable<Board | undefined>;
+  currentBoardId?: string;
   title = 'My Task Boards';
   activityMenuOpen: boolean = false;
+  newBoardTitle: string = '';
+
+  constructor(private store: Store<AppState>) {}
+
+  ngOnInit(): void {
+    
+    this.store.dispatch(BoardActions.loadBoards());
+    this.boards$ = this.store.pipe(select(boardsSelector));
+    const storedBoardId = localStorage.getItem('currentBoardId');
+    if (storedBoardId) {
+      this.store.dispatch(BoardActions.selectBoard({ boardId: storedBoardId }));
+    }
+    this.currentBoard$ = this.store.pipe(select(currentBoardSelector));
+  }
 
   toggleActivityMenu() {
     this.activityMenuOpen = !this.activityMenuOpen;
   }
 
-  loadBoards() {
-    this.boardService.getBoards().subscribe(boards => this.boards = boards)
+  onBoardSelected(boardId: string) {
+    localStorage.setItem('currentBoardId', boardId);
+    this.store.dispatch(BoardActions.selectBoard({ boardId }));
+    this.currentBoard$?.subscribe(board => this.currentBoardId = board?.id);
+    this.store.subscribe(store => this.currentBoardId = store.boards.currentBoard?.id).unsubscribe;
   }
 
-  getBoard(){
-    if (this.currentBoardId) {
-      this.boardService.getById(this.currentBoardId).subscribe(board => this.currentBoard = board);
+  onBoardDeleted() {
+    if(this.currentBoard$){
+      this.currentBoard$.pipe(
+        take(1),
+        map(currentBoard => {
+            if (currentBoard && currentBoard.id) {
+                this.store.dispatch(BoardActions.deleteBoard({ boardId: currentBoard.id }));
+                localStorage.removeItem('currentBoardId');
+            }
+        })
+    ).subscribe();
     }
   }
 
@@ -47,32 +61,10 @@ export class AppComponent implements OnInit {
     this.activityMenuOpen = false;
   }
 
-  onBoardSelected(boardId: string) {
-    this.currentBoardId = boardId;
-    localStorage.setItem('currentBoardId', boardId);
-    this.getBoard();
-    this.boardSelected.emit(boardId);
-  }
-
-  onBoardDeleted() {
-    localStorage.removeItem('currentBoardId');
-    this.currentBoardId = null;
-    this.currentBoard = undefined;
-    this.boardDeleted.emit();
-  }
-
   addBoard() {
     if (this.newBoardTitle) {
-      this.boardService.addBoard(this.newBoardTitle).subscribe({
-        next: (boardId: string) => {
-          this.currentBoardId = boardId;
-          localStorage.setItem('currentBoardId', boardId);
-          this.getBoard();
-          this.newBoardTitle = '';
-          this.loadBoards();
-        },
-        error: error => console.log(error)
-      });
+        this.store.dispatch(BoardActions.addBoard({ title: this.newBoardTitle }));
+        this.newBoardTitle = '';
     }
-  } 
+  }
 }

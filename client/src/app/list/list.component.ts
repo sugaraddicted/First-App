@@ -5,6 +5,7 @@ import { CardModalComponent } from '../card-modal/card-modal.component';
 import { Card } from '../_models/card';
 import { ListService } from '../_services/list.service';
 import { Store } from '@ngrx/store';
+import * as BoardActions from '../store/actions/boards.actions';
 
 @Component({
   selector: 'app-list',
@@ -19,7 +20,8 @@ export class ListComponent implements OnInit {
   editedListTitle: string = '';
 
   constructor(public dialog: MatDialog, 
-    private listService: ListService) { }
+    private listService: ListService,
+    private store: Store) { }
 
   ngOnInit(): void {
 
@@ -31,19 +33,12 @@ export class ListComponent implements OnInit {
   }
 
   saveEdit() {
-    if (this.editedListTitle.trim() === '') {
+    if (this.editedListTitle.trim() === '' || !this.list) {
       return;
     }
-  
-    this.list!.name = this.editedListTitle.trim();
-    if(this.list){
-      this.listService.updateList(this.list).subscribe({
-        next: () => this.isEditing = false,
-        error: error => {
-          console.error('Error updating list:', error)
-        }});
-    }
-    
+    const updatedList = { ...this.list, name: this.editedListTitle.trim() };
+    this.store.dispatch(BoardActions.updateList({ list: updatedList }));
+    this.isEditing = false;
   }
   
   delete() {

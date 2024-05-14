@@ -1,6 +1,6 @@
 <div class="board-container">
     <ul class="horizontal-list" style="float:inline-start; position: relative;">
-        <ng-container *ngFor="let list of lists">
+        <ng-container *ngFor="let list of lists$ | async ">
             <app-list [list]="list"></app-list>
         </ng-container>
         <div class="list-placeholder" *ngIf="!addingList; else addListForm">

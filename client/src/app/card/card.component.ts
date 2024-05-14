@@ -4,8 +4,12 @@ import { CardDetailsModalComponent } from '../card-details-modal/card-details-mo
 import { MatDialog } from '@angular/material/dialog';
 import { List } from '../_models/list';
 import { CardService } from '../_services/card.service';
-import { Router } from '@angular/router';
+import * as BoardActions from '../store/actions/boards.actions';
 import { ListService } from '../_services/list.service';
+import { Observable } from 'rxjs';
+import { Store, select } from '@ngrx/store';
+import { AppState } from '../store/appSate';
+import { currentBoardListsSelector } from '../store/selectors/selectors';
 
 @Component({
   selector: 'app-card',
@@ -15,16 +19,20 @@ import { ListService } from '../_services/list.service';
 export class CardComponent implements OnInit{
   @Input() card: Card | undefined;
   @Output() editCardClicked: EventEmitter<Card> = new EventEmitter<Card>();
-  lists?: List[];
+  lists$: Observable<List[] | undefined>;
 
   selectedOption: string = ''; 
 
-  constructor(public dialog: MatDialog, 
+  constructor(public dialog: MatDialog,
+    private store: Store<AppState>, 
     public listService: ListService, 
-    public cardService: CardService, 
-    public router: Router){}
+    public cardService: CardService){
+      this.lists$ = this.store.pipe(select(currentBoardListsSelector));
+    }
+
   ngOnInit(): void {
-    this.loadLists();
+    if (this.card) {
+    }
   }
 
   editCard() {
@@ -40,24 +48,13 @@ export class CardComponent implements OnInit{
 
   updateCard(listId: string){
     if (this.card) {
-      this.card.boardListId = listId;
-      this.cardService.updateCard(this.card, this.card.id).subscribe(() => {
-      });
+      const updatedCard = { ...this.card, boardListId: listId };
+      this.store.dispatch(BoardActions.updateCard({ card: updatedCard }));
     }
-    this.reloadPage();
   }
 
   openCardDetailsModal(card: Card) {
     this.dialog.open(CardDetailsModalComponent, { data: { listId: card.boardId ,card: card } });
-  }
-
-  reloadPage(): void {
-    location.reload();
-  }
-
-  loadLists(){
-    if(this.card)
-      this.listService.getListsByBoardId(this.card.boardId).subscribe(lists => this.lists = lists)
   }
   
   getPriorityCaption(priority: number): string {

@@ -23,7 +23,7 @@
           <mat-icon style="margin-left: auto;">keyboard_arrow_down</mat-icon>
           </button>      
           <mat-menu #moveToMenu="matMenu">
-            <button mat-menu-item *ngFor="let list of lists" (click)="updateCard(list.id)" >{{list.name}}</button>
+            <button mat-menu-item *ngFor="let list of lists$ | async" (click)="updateCard(list.id)" >{{list.name}}</button>
           </mat-menu>
     </div>
 </div>

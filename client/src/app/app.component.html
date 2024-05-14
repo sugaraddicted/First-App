@@ -1,15 +1,28 @@
-<app-header [currentBoardId]="currentBoardId" (toggleActivityMenu)="toggleActivityMenu()"
-            (boardSelected)="onBoardSelected($event)"
-            (boardDeleted)="onBoardDeleted()"></app-header>
-<app-history-sidebar *ngIf="activityMenuOpen && currentBoardId"  (closeSidebar)="closeSidebar()" [boardId]="currentBoardId"></app-history-sidebar>
-<app-board *ngIf="currentBoard" [boardId]="currentBoardId"></app-board>
-<div class="form-container" *ngIf="!currentBoard">
+<!-- AppComponent Template -->
+<app-header 
+    [currentBoardId]="(currentBoard$ | async)?.id" 
+    (toggleActivityMenu)="toggleActivityMenu()"
+    (boardSelected)="onBoardSelected($event)"
+    (boardDeleted)="onBoardDeleted()">
+</app-header>
+
+<app-history-sidebar 
+    *ngIf="activityMenuOpen" 
+    (closeSidebar)="closeSidebar()" >
+</app-history-sidebar>
+
+<app-board 
+  *ngIf="currentBoard$ | async as currentBoard">
+</app-board>
+
+<div *ngIf="!(currentBoard$ | async)" class="form-container">
     <div class="add-board-form">
         <h1>Add new Board</h1>
         <h4>or</h4>
         <h4 class="heading-secondary" style="margin-bottom: 40px;">Select existing above</h4>
         <input type="text" [(ngModel)]="newBoardTitle" class="list-input" placeholder="Enter new board name">
         <button class="add-button" (click)="addBoard()">Add Board</button>
-      </div>
+    </div>
 </div>
+
 <div class="overlay" *ngIf="activityMenuOpen" (click)="closeSidebar()"></div>

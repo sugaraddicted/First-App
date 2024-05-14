@@ -30,6 +30,7 @@
 
 .save-button{
     flex-grow: 1;
+    width: 60px;
     margin-left: 5px;
     background-color: gray;
     color: white;

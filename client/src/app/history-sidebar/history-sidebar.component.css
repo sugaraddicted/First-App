@@ -27,6 +27,8 @@
 }
 
 .load-button {
+  width: 80%;
+  justify-content: center;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -37,6 +39,6 @@
   padding-top: 8px;
   padding-bottom: 8px;
   background-color: rgb(255, 255, 255);
-  border: 2px solid rgb(216, 216, 216);
+  border: none;
   border-radius: 5px;
 }

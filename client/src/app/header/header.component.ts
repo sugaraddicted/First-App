@@ -1,122 +1,93 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { BoardService } from '../_services/board.service';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Board } from '../_models/board';
-import { union } from '@ngrx/store';
+import * as BoardActions from '../store/actions/boards.actions';
+import { boardsSelector, currentBoardSelector } from '../store/selectors/selectors';
+import { AppState } from '../store/appSate';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit{
-  @Output() toggleActivityMenu: EventEmitter<void> = new EventEmitter<void>();
-  @Output() boardSelected: EventEmitter<string> = new EventEmitter<string>();
-  @Output() boardDeleted: EventEmitter<void> = new EventEmitter<void>();
-  isBoardSelected = false;
-  @Input() currentBoardId: string | null = null;
-  isEditing = false;
-  addingBoard = false;
-  editedBoardTitle?: string;
-  newBoardTitle?: string;
-  currentBoard?: Board;
-  boards?: Board[];
-  selectedBoardName = this.boards?.find(board => board.id === this.currentBoardId)?.name || '';
+export class HeaderComponent implements OnInit {
+  @Output() toggleActivityMenu = new EventEmitter<void>();
+  @Output() boardSelected = new EventEmitter<string>();
+  @Input() currentBoardId?: string;
 
-  constructor(private boardService: BoardService) { }
+  boards$ = this.store.select(boardsSelector);
+  currentBoard$ = this.store.select(currentBoardSelector);
+  currentBoard?: Board;
+  isEditing = false;
+  newBoardTitle: string = '';
+  addingBoard: boolean = false;
+  isBoardSelected: boolean = false;
+  editedBoardTitle: string = '';
+
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.loadBoards();
-    this.getBoard();
-  }
-
-  loadBoards() {
-    this.boardService.getBoards().subscribe(boards => this.boards = boards)
+    this.store.dispatch(BoardActions.loadBoards());
+    this.store.select(currentBoardSelector).subscribe(board => {
+      this.currentBoard = board;
+      if(this.currentBoard && this.currentBoard.name){
+        this.isBoardSelected = true;
+        this.editedBoardTitle = this.currentBoard.name;
+      }
+    });
   }
 
   onToggleActivityMenu() {
     this.toggleActivityMenu.emit();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['currentBoardId'] && this.currentBoardId) {
-      this.loadBoards();
+  onSelectBoard(boardId: string) {
+    this.store.dispatch(BoardActions.selectBoard({ boardId }));
+    this.boardSelected.emit(boardId);
+    this.isBoardSelected = true;
+  }
+
+  onAddBoard() {
+    if (this.newBoardTitle) {
+      this.store.dispatch(BoardActions.addBoard({ title: this.newBoardTitle }));
+      this.currentBoard$ = this.store.select(currentBoardSelector);
       this.isBoardSelected = true;
+      this.newBoardTitle = '';
+      this.addingBoard = false;
     }
   }
 
-  saveEdit(){
-    if(this.currentBoard && this.editedBoardTitle){
-      console.log(this.editedBoardTitle);
-      this.currentBoard.name = this.editedBoardTitle;
-      this.boardService.updateBoard(this.currentBoard).subscribe({
-      next: _ => {
-        this.loadBoards();
-        console.log(this.editedBoardTitle);
-        this.isEditing = false;
-      } 
-    });
+  onDeleteBoard() {
+    if (this.currentBoardId) {
+      this.isBoardSelected = false;
+      this.store.dispatch(BoardActions.deleteBoard({ boardId: this.currentBoardId }));
+      this.currentBoard = undefined;
+    }
+  }
+
+  onSaveEdit() {
+    if (this.currentBoard && this.editedBoardTitle.trim()) {
+      const updatedBoard: Board = {
+        ...this.currentBoard,
+        name: this.editedBoardTitle.trim()
+      };
+      this.store.dispatch(BoardActions.updateBoard({ board: updatedBoard }));
+      this.isEditing = false;
     }
   }
 
   cancelEdit() {
     this.isEditing = false;
-    this.editedBoardTitle = '';
+    if(this.currentBoard)
+    this.editedBoardTitle = this.currentBoard?.name;
   }
-
+ 
   cancelAdding() {
     this.addingBoard = false;
     this.newBoardTitle = '';
   }
 
-  delete(){
-    if(this.currentBoardId)
-    this.boardService.deleteBoard(this.currentBoardId).subscribe({
-      next: _ => {
-        this.onBoardDeleted();
-      }
-    });
-  }
-
-  addBoard() {
-    if (this.newBoardTitle) {
-      this.boardService.addBoard(this.newBoardTitle).subscribe({
-        next: (boardId: string) => {
-          this.onBoardSelected(boardId);
-          this.newBoardTitle = '';
-          this.addingBoard = false;
-          this.loadBoards();
-        },
-        error: error => console.log(error)
-      });
-    }
-  }
-
   toggleAddingBoard() {
     this.addingBoard = !this.addingBoard;
-    if (!this.addingBoard) {
-        this.newBoardTitle = '';
-    }
-  }
-
-  getBoard(){
-    if(this.currentBoardId)
-    this.boardService.getById(this.currentBoardId).subscribe({
-      next: board => this.currentBoard = board
-    });
-  }
-
-  onBoardSelected(boardId: string) {
-    this.isBoardSelected = true;
-    this.boardSelected.emit(boardId);
-    this.currentBoardId = boardId;
-    this.getBoard();
-  }
-
-  onBoardDeleted(){
-    this.isBoardSelected = false;
-    this.currentBoard = undefined;
-    this.currentBoardId = null;
-    this.loadBoards();
-    this.boardDeleted.emit();
   }
 }

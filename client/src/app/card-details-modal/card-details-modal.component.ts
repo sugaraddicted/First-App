@@ -2,12 +2,14 @@ import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { List } from '../_models/list';
 import { Card } from '../_models/card';
-import { BoardService } from '../_services/board.service';
+import * as BoardActions from '../store/actions/boards.actions';
 import { ActivityService } from '../_services/activity.service';
 import { ActivityLog } from '../_models/activityLog';
 import { CardService } from '../_services/card.service';
 import { CardModalComponent } from '../card-modal/card-modal.component';
 import { ListService } from '../_services/list.service';
+import { AppState } from '../store/appSate';
+import { Store } from '@ngrx/store';
 
 
 @Component({
@@ -31,7 +33,8 @@ export class CardDetailsModalComponent implements OnInit {
     private listService: ListService,
     private activityService: ActivityService,
     public cardService: CardService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private store: Store<AppState>
   ) { }
 
   ngOnInit(): void {
@@ -52,9 +55,8 @@ export class CardDetailsModalComponent implements OnInit {
 
   updateCard(listId: string){
     if (this.card) {
-      this.card.boardListId = listId;
-      this.cardService.updateCard(this.card, this.card.id).subscribe(() => {
-      });
+      const updatedCard = { ...this.card, boardListId: listId };
+      this.store.dispatch(BoardActions.updateCard({ card: updatedCard }));
     }
   }
 

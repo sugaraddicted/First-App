@@ -8,23 +8,26 @@
         </div>
         <div *ngIf="addingBoard" class="edit-board-form">
             <input type="text" [(ngModel)]="newBoardTitle" class="board-input" placeholder="Enter new board title">
-                <button class="save-button" (click)="addBoard()">Add</button>
+                <button class="save-button" (click)="onAddBoard()">Add</button>
                 <button class="cancel-button" (click)="cancelAdding()">Cancel</button>
         </div>
-        <mat-select style="font-size: 28px; width: 50%;" *ngIf="!isEditing" (valueChange)="onBoardSelected($event)" [(value)]="currentBoardId" placeholder="{{ selectedBoardName || 'Select Board' }}">
-            <mat-option *ngFor="let board of boards" [value]="board.id"> {{ board.name }}</mat-option>
+        <mat-select style="font-size: 28px; width: 50%;" *ngIf="!isEditing"
+                (selectionChange)="onSelectBoard($event.value)"
+                [value]="(currentBoard$ | async)?.id"
+                placeholder="{{ (currentBoard$ | async)?.name || 'Select Board' }}">
+            <mat-option *ngFor="let board of boards$ |async" [value]="board.id"> {{ board.name }}</mat-option>
         </mat-select>
         <div *ngIf="isEditing" class="edit-board-form">
             <input type="text" [(ngModel)]="editedBoardTitle" class="board-input" placeholder="Enter board title">
-            <button class="save-button" (click)="saveEdit()">Save</button>
-            <button class="cancel-button" (click)="cancelAdding()">Cancel</button>
+            <button class="save-button" (click)="onSaveEdit()">Save</button>
+            <button class="cancel-button" (click)="cancelEdit()">Cancel</button>
         </div>
-        <button *ngIf="isBoardSelected" mat-icon-button [matMenuTriggerFor]="boardMenu" aria-label="Menu">
+        <button *ngIf="isBoardSelected" mat-icon-button [matMenuTriggerFor]="boardMenu" aria-label="Menu" style="margin-left: 10px; margin-right: 10px;">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #boardMenu="matMenu">
             <button mat-menu-item (click)="isEditing = true"><mat-icon>create</mat-icon> Edit</button>
-            <button mat-menu-item (click)="delete()" style="color: red"><mat-icon style="color: red">delete_outline</mat-icon> Delete</button>
+            <button mat-menu-item (click)="onDeleteBoard()" style="color: red"><mat-icon style="color: red">delete_outline</mat-icon> Delete</button>
           </mat-menu>
         <button *ngIf="isBoardSelected" class="history-button" (click)="onToggleActivityMenu()">
             <mat-icon style="margin-right: 5px;">history</mat-icon> History

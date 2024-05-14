@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivityService } from '../_services/activity.service';
 import { ActivityLog } from '../_models/activityLog';
+import { Store } from '@ngrx/store';
+import { AppState } from '../store/appSate';
 
 @Component({
   selector: 'app-history-sidebar',
@@ -9,14 +11,18 @@ import { ActivityLog } from '../_models/activityLog';
 })
 export class HistorySidebarComponent implements OnInit{
   @Output() closeSidebar: EventEmitter<void> = new EventEmitter<void>();
-  @Input() boardId?: string;
+  boardId?: string;
   activityLogs: ActivityLog[] = [];
   pageNumber = 1;
   pageSize = 10;
   
-  constructor(private activityService: ActivityService){}
+  constructor(private activityService: ActivityService,
+    private store: Store<AppState>
+  ){}
 
   ngOnInit(): void {
+    this.store.subscribe(store => this.boardId = store.boards.currentBoard?.id).unsubscribe;
+    console.log(this.boardId);
     this.loadActivityLogs();
   }
 
