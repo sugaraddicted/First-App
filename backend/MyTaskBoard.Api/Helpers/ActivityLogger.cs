@@ -17,14 +17,14 @@ namespace MyTaskBoard.Api.Helpers
             _mapper = mapper;
         }
 
-        public async Task LogOnCreate(Card card)
+        public async Task LogOnCreate(Card card, string listName)
         {
             var activityLogDto = new ActivityLogDto()
             {
                 Action = $"You added",
                 CardName = card.Name,
                 Timestamp = DateTime.UtcNow,
-                After = card.BoardListId.ToString(),
+                After = listName,
                 CardId = card.Id,
                 BoardId = card.BoardId
             };
