@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyTaskBoard.Api.Dto.AutoMapper;
+using MyTaskBoard.Api.Helpers;
 using MyTaskBoard.Api.Middleware;
 using MyTaskBoard.Infrastructure.Persistence;
 using MyTaskBoard.Infrastructure.Repository;
@@ -25,6 +26,7 @@ builder.Services.AddScoped<IBoardListRepository, BoardListRepository>();
 builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
+builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
 
 
 builder.Services.AddEndpointsApiExplorer();
