@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MyTaskBoard.Api.Dto;
+using MyTaskBoard.Api.Helpers;
 using MyTaskBoard.Core.Entity;
 using MyTaskBoard.Infrastructure.Repository.Interfaces;
 
@@ -12,15 +13,15 @@ namespace MyTaskBoard.Api.Controllers
     {
         private readonly ICardRepository _cardRepository;
         private readonly IMapper _mapper;
-        private readonly IActivityLogRepository _activityLogRepository;
         private readonly IBoardListRepository _boardListRepository;
+        private readonly IActivityLogger _activityLogger;
 
-        public CardController(ICardRepository cardRepository, IMapper mapper, IActivityLogRepository activityLogRepository, IBoardListRepository boardListRepository)
+        public CardController(ICardRepository cardRepository, IMapper mapper, IBoardListRepository boardListRepository, IActivityLogger activityLogger)
         {
             _cardRepository = cardRepository;
             _mapper = mapper;
-            _activityLogRepository = activityLogRepository;
             _boardListRepository = boardListRepository;
+            _activityLogger = activityLogger;
         }
 
         [HttpGet("/{listId}")]
@@ -45,20 +46,8 @@ namespace MyTaskBoard.Api.Controllers
             var boardList = await _boardListRepository.GetByIdAsync(cardDto.BoardListId);
             var card = _mapper.Map<Card>(cardDto);
             await _cardRepository.AddAsync(card);
-            
 
-            var activityLogDto = new ActivityLogDto()
-            {
-                Action = $"You added",
-                CardName = card.Name,
-                Timestamp = DateTime.UtcNow,
-                After = boardList.Name,
-                CardId = card.Id,
-                BoardId = card.BoardId
-            };
-
-            var activityLog = _mapper.Map<ActivityLog>(activityLogDto);
-            await _activityLogRepository.AddAsync(activityLog);
+            await _activityLogger.LogOnCreate(card, boardList.Name);
 
             var cardDtoWithId = _mapper.Map<CardDto>(card);
             return CreatedAtAction(nameof(GetCardsByListId), new { listId = card.BoardListId }, cardDtoWithId);
@@ -74,7 +63,7 @@ namespace MyTaskBoard.Api.Controllers
             if (existingCard == null)
                 return NotFound();
 
-            await LogActivity(existingCard, cardDto);
+            await _activityLogger.LogOnUpdate(existingCard, cardDto);
 
             _mapper.Map(cardDto, existingCard);
             await _cardRepository.UpdateAsync(id, existingCard);
@@ -86,101 +75,15 @@ namespace MyTaskBoard.Api.Controllers
         public async Task<IActionResult> DeleteCard(Guid id)
         {
             var existingCard = await _cardRepository.GetByIdAsync(id);
-            var boardList = await _boardListRepository.GetByIdAsync(existingCard.BoardListId);
 
             if (existingCard == null)
                 return NotFound();
 
-            var activityLogDto = new ActivityLogDto()
-            {
-                Action = "You deleted",
-                CardName = existingCard.Name,
-                CardId = existingCard.Id,
-                Timestamp = DateTime.UtcNow,
-                BoardId = existingCard.BoardId
-            };
-
-            var activityLog = _mapper.Map<ActivityLog>(activityLogDto);
-            await _activityLogRepository.AddAsync(activityLog);
+            await _activityLogger.LogOnDelete(existingCard);
 
             await _cardRepository.DeleteAsync(id);
 
             return NoContent();
-        }
-
-        private async Task LogActivity(Card existingCard, UpdateCardDto newCard)
-        { 
-            var activityLogs = new List<ActivityLogDto>();
-            var boardList = await _boardListRepository.GetByIdAsync(existingCard.BoardListId);
-
-            if (newCard.Name != existingCard.Name)
-            {
-                activityLogs.Add(
-                    new ActivityLogDto()
-                    {
-                        Action = "You renamed",
-                        Before = existingCard.Name,
-                        After = newCard.Name
-                    });
-            }
-
-            if (newCard.BoardListId != existingCard.BoardListId)
-            {
-                var newBoardList = await _boardListRepository.GetByIdAsync(newCard.BoardListId);
-                var oldBoardList = await _boardListRepository.GetByIdAsync(existingCard.BoardListId);
-
-                activityLogs.Add(
-                    new ActivityLogDto()
-                    {
-                        Action = "You moved",
-                        Before = oldBoardList.Name,
-                        After = newBoardList.Name,
-                    });
-            }
-
-            if (newCard.DueDate != existingCard.DueDate)
-            {
-                activityLogs.Add(
-                    new ActivityLogDto()
-                    {
-                        Action ="You changed Due Date",
-                        Before = existingCard.DueDate.ToShortDateString() + " " + existingCard.DueDate.ToShortTimeString(),
-                        After = newCard.DueDate.ToShortDateString() + " " + newCard.DueDate.ToShortTimeString(),
-                    });
-            }
-
-            if (newCard.Priority != existingCard.Priority)
-            {
-                activityLogs.Add(
-                    new ActivityLogDto()
-                    {
-                        Action = "You changed priority",
-                        Before = existingCard.Priority.ToString(),
-                        After = newCard.Priority.ToString(),
-                    });
-            }
-
-            if (newCard.Description != existingCard.Description)
-            {
-                activityLogs.Add(
-                    new ActivityLogDto()
-                    {
-                        Action = "You changed Description",
-                        Before = existingCard.Description,
-                        After = newCard.Description,
-                    });
-            }
-
-            foreach (var activityLogDto in activityLogs)
-            {
-                activityLogDto.CardId = existingCard.Id;
-                activityLogDto.CardName = newCard.Name;
-                activityLogDto.Timestamp = DateTime.UtcNow;
-                activityLogDto.BoardId = existingCard.BoardId;
-
-                var activityLog = _mapper.Map<ActivityLog>(activityLogDto);
-                await _activityLogRepository.AddAsync(activityLog);
-            }
         }
     }
 }
