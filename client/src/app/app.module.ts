@@ -25,7 +25,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { listsReducer } from './store/reducers/lists.reduces';
+import { BoardsEffects } from './store/effects/boards.effect';
+import { boardReducer } from './store/reducers/boards.reducer';
 
 @NgModule({
   declarations: [
@@ -54,11 +55,12 @@ import { listsReducer } from './store/reducers/lists.reduces';
     MatDatepickerModule,
     MatNativeDateModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({
-      lists: listsReducer
-    }, {}),
+    StoreModule.forRoot(),
+    EffectsModule.forRoot(),
+    StoreModule.forFeature('boards', boardReducer),
+    EffectsModule.forFeature([BoardsEffects]),
     EffectsModule.forRoot([]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   exports:[
     CardModalComponent,
