@@ -26,7 +26,7 @@ export class ListService {
   }
 
   updateList(list: List){
-    return this.http.put(`${this.baseUrl}/BoardList/${list.id}`, list);
+    return this.http.patch(`${this.baseUrl}/BoardList/${list.id}`, list);
   }
 
   deleteList(listId: string){

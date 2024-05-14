@@ -20,10 +20,10 @@ export class BoardService {
     return this.http.get<Board>(`${this.baseUrl}/Board/${boardId}`);
   }
 
-  addBoard(title: string): Observable<string> {;
+  addBoard(title: string): Observable<Board> {;
     return this.http.post<Board>(this.baseUrl + `/Board/${title}`, title).pipe(
       map(board => {
-        return board.id;
+        return board;
       })
     );
   }
