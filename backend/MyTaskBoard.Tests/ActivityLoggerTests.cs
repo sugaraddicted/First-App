@@ -34,13 +34,14 @@ namespace MyTaskBoard.Tests
         {
             // Arrange
             var card = new Card { Id = Guid.NewGuid(), Name = "Test Card", BoardListId = Guid.NewGuid(), BoardId = Guid.NewGuid() };
+            string listName = "Test List";
             var activityLog = new ActivityLog();
 
             _mockMapper.Setup(m => m.Map<ActivityLog>(It.IsAny<ActivityLogDto>())).Returns(activityLog);
             _mockActivityLogRepository.Setup(r => r.AddAsync(activityLog)).Returns(Task.CompletedTask);
 
             // Act
-            await _activityLogger.LogOnCreate(card);
+            await _activityLogger.LogOnCreate(card, listName);
 
             // Assert
             _mockMapper.Verify(m => m.Map<ActivityLog>(It.IsAny<ActivityLogDto>()), Times.Once);
@@ -104,13 +105,14 @@ namespace MyTaskBoard.Tests
         {
             // Arrange
             var card = new Card { Id = Guid.NewGuid(), Name = "Error Test Card", BoardListId = Guid.NewGuid(), BoardId = Guid.NewGuid() };
+            string listName = "Test List";
             var activityLog = new ActivityLog();
 
             _mockMapper.Setup(m => m.Map<ActivityLog>(It.IsAny<ActivityLogDto>())).Returns(activityLog);
             _mockActivityLogRepository.Setup(r => r.AddAsync(activityLog)).ThrowsAsync(new Exception("Simulated database failure"));
 
             // Act & Assert
-            Assert.ThrowsAsync<Exception>(async () => await _activityLogger.LogOnCreate(card));
+            Assert.ThrowsAsync<Exception>(async () => await _activityLogger.LogOnCreate(card, listName));
         }
     }
 }
