@@ -22,9 +22,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MyTaskBoard.Core\MyTaskBoard.Core.csproj" />
-    <ProjectReference Include="..\MyTaskBoard.Infrastructure\MyTaskBoard.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MyTaskBoard.Core\MyTaskBoard.Core.csproj" />
+		<ProjectReference Include="..\MyTaskBoard.Infrastructure\MyTaskBoard.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="MyTaskBoard.IntegrationTests"/>
+	</ItemGroup>
 
 </Project>

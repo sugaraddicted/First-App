@@ -11,16 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
-builder.Services.AddDbContextPool<DataContext>(options =>
+builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseNpgsql(connectionString,
         b => b.MigrationsAssembly("MyTaskBoard.Infrastructure"));
 });
-builder.Services.AddPooledDbContextFactory<DataContext>(options =>
-{
-    options.UseNpgsql(connectionString,
-        b => b.MigrationsAssembly("MyTaskBoard.Infrastructure"));
-});
+
 builder.Services.AddCors();
 builder.Services.AddScoped<IBoardListRepository, BoardListRepository>();
 builder.Services.AddScoped<IBoardRepository, BoardRepository>();
