@@ -1,8 +1,4 @@
 
-This will start a development server, and you can view the application by navigating to `http://localhost:4200` in your web browser.
-
-## Functional Requirements
-
 ### Lists
 
 - **Create, Edit, and Delete**: Users can create, edit, and delete lists.
